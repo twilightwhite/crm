@@ -8,6 +8,8 @@ import com.bjpowernode.crm.utils.PrintJson;
 import com.bjpowernode.crm.utils.ServiceFactory;
 import com.bjpowernode.crm.utils.UUIDUtil;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.service.ClueService;
+import com.bjpowernode.crm.workbench.service.impl.ClueServiceImpl;
 import org.omg.CORBA.ARG_OUT;
 
 import javax.servlet.ServletException;
@@ -30,7 +32,18 @@ public class ClueController extends HttpServlet {
             getUserList(request, response);
         } else if ("/workbench/clue/save.do".equals(path)) {
             save(request, response);
+        }else if ("/workbench/clue/detail.do".equals(path)) {
+            detail(request, response);
         }
+    }
+
+    private void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("跳转详细信息页面");
+        String id = request.getParameter("id");
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        Clue c = cs.detail(id);
+        request.setAttribute("c", c);
+        request.getRequestDispatcher("/workbench/clue/detail.jsp").forward(request,response);
     }
 
     private void save(HttpServletRequest request, HttpServletResponse response) {
@@ -47,8 +60,8 @@ public class ClueController extends HttpServlet {
         String mphone = request.getParameter("mphone");
         String state = request.getParameter("state");
         String source = request.getParameter("source");
-        String createBy = DateTimeUtil.getSysTime();
-        String createTime = ((User)request.getSession().getAttribute("user")).getName();
+        String createTime = DateTimeUtil.getSysTime();
+        String createBy = ((User)request.getSession().getAttribute("user")).getName();
         String description = request.getParameter("description");
         String contactSummary = request.getParameter("contactSummary");
         String nextContactTime = request.getParameter("nextContactTime");
@@ -72,6 +85,9 @@ public class ClueController extends HttpServlet {
         c.setAddress(address);
         c.setAppellation(appellation);
         c.setCompany(company);
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        boolean flag = cs.save(c);
+        PrintJson.printJsonFlag(response,flag);
     }
 
     private void getUserList(HttpServletRequest request, HttpServletResponse response) {
