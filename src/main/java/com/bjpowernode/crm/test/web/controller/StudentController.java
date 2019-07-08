@@ -21,22 +21,22 @@ import java.util.Map;
  */
 public class StudentController extends HttpServlet {
     @Override
-    protected void service(HttpServletRequest requst, HttpServletResponse response) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("进入到学生控制器");
-        String path = requst.getServletPath();
+        String path = request.getServletPath();
         if ("/test/getByStudentList.do".equals(path)){
-            getByStudentList(requst,response);
+            getByStudentList(request,response);
         }
     }
 
-    private void getByStudentList(HttpServletRequest requst, HttpServletResponse response) {
+    private void getByStudentList(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("学生列表  结合分页查询 + 条件查询");
-        String name = requst.getParameter("name");
-        String sex = requst.getParameter("sex");
-        String address = requst.getParameter("address");
-        String phone = requst.getParameter("phone");
-        String pageNoStr = requst.getParameter("pageNo");
-        String pageSizeStr = requst.getParameter("pageSize");
+        String name = request.getParameter("name");
+        String sex = request.getParameter("sex");
+        String address = request.getParameter("address");
+        String phone = request.getParameter("phone");
+        String pageNoStr = request.getParameter("pageNo");
+        String pageSizeStr = request.getParameter("pageSize");
         int pageNo = Integer.valueOf(pageNoStr);
         int pageSize = Integer.valueOf(pageSizeStr);
         int skipCount = (pageNo - 1) * pageSize;
@@ -49,6 +49,6 @@ public class StudentController extends HttpServlet {
         map.put("pageSize", pageSize);
         StudentService ss = (StudentService) ServiceFactory.getService(new StudentServiceImpl());
         PaginationVo<Student> vo = ss.getByStudentList(map);
-        PrintJson.printJsonObj(response, ss);
+        PrintJson.printJsonObj(response, vo);
     }
 }

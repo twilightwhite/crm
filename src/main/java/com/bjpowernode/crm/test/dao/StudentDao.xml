@@ -30,13 +30,13 @@
                 and name like '%'#{name}'%'
             </if>
             <if test="sex != null and sex != ''">
-                sex=#{sex}
+                and sex=#{sex}
             </if>
-            <if test="adress != null and adress != ''">
-                adress like '%'#{adress}'%'
+            <if test="address != null and address != ''">
+                and address like '%'#{address}'%'
             </if>
             <if test="phone != null and phone != ''">
-                phone like '%'#{phone}'%'
+                and phone like '%'#{phone}'%'
             </if>
         </where>
     </select>

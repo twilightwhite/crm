@@ -33,7 +33,7 @@
 
                     $("#hidden-name").val($.trim($("#search-name").val()));
                     $("#hidden-sex").val($.trim($("#search-sex").val()));
-                    $("#hidden-adress").val($.trim($("#search-address").val()));
+                    $("#hidden-address").val($.trim($("#search-address").val()));
                     $("#hidden-phone").val($.trim($("#search-phone").val()));
                     pageList(1,2);
                 });
@@ -62,7 +62,6 @@
                         $.each(data.dataList,function (i,n) {
                             html += '<tr class="active">';
                             html += '<td><input type="checkbox" value="' +n.id + '"/></td>';
-                            //html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp;'">发传单</a></td>';
                             html += '<td>'+n.name+'</td>';
                             html += '<td>'+n.sex+'</td>';
                             html += '<td>'+n.address+'</td>';
