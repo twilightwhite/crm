@@ -29,17 +29,76 @@
 
                 //为查询按钮绑定事件，执行条件查询
                 $("#searchBtn").click(function () {
+                    //保存到隐藏域
+
+                    $("#hidden-name").val($.trim($("#search-name").val()));
+                    $("#hidden-sex").val($.trim($("#search-sex").val()));
+                    $("#hidden-adress").val($.trim($("#search-address").val()));
+                    $("#hidden-phone").val($.trim($("#search-phone").val()));
                     pageList(1,2);
                 });
 
             });
 
             function pageList(pageNo,pageSize) {
+                $("#search-name").val($.trim($("#hidden-name").val()));
+                $("#search-sex").val($.trim($("#hidden-sex").val()));
+                $("#search-address").val($.trim($("#hidden-address").val()));
+                $("#search-phone").val($.trim($("#hidden-phone").val()));
+                $.ajax({
+                    url : "test/getByStudentList.do",
+                    data : {
+                        "pageNo" : pageNo,
+                        "pageSize" : pageSize,
+                        "name" : $.trim($("#search-name").val()),
+                        "sex" : $.trim($("#search-sex").val()),
+                        "adress" : $.trim($("#search-address").val()),
+                        "phone" : $.trim($("#search-phone").val())
+                    },
+                    type : "get",
+                    dataType : "json",
+                    success : function (data) {
+                        var html = "";
+                        $.each(data.dataList,function (i,n) {
+                            html += '<tr class="active">';
+                            html += '<td><input type="checkbox" value="' +n.id + '"/></td>';
+                            //html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp;'">发传单</a></td>';
+                            html += '<td>'+n.name+'</td>';
+                            html += '<td>'+n.sex+'</td>';
+                            html += '<td>'+n.address+'</td>';
+                            html += '<td>'+n.phone+'</td>';
+                            html += '</tr>';
+                        });
+                        $("#studentBody").html(html);
+                        var totalPages = data.total%pageSize==0?data.total/pageSize:parseInt(data.total/pageSize)+1;
+                        $("#activityPage").bs_pagination({
+                            currentPage: pageNo, // 页码
+                            rowsPerPage: pageSize, // 每页显示的记录条数
+                            maxRowsPerPage: 20, // 每页最多显示的记录条数
+                            totalPages: totalPages, // 总页数
+                            totalRows: data.total, // 总记录条数
 
+                            visiblePageLinks: 3, // 显示几个卡片
+
+                            showGoToPage: true,
+                            showRowsPerPage: true,
+                            showRowsInfo: true,
+                            showRowsDefaultInfo: true,
+
+                            onChangePage : function(event, data){
+                                pageList(data.currentPage , data.rowsPerPage);
+                            }
+                        });
+                    }
+                });
             }
         </script>
     </head>
     <body>
+        <input type="hidden" id="hidden-name" />
+        <input type="hidden" id="hidden-sex" />
+        <input type="hidden" id="hidden-address" />
+        <input type="hidden" id="hidden-phone" />
 
         <div>
             <div style="position: relative; left: 10px; top: -10px;">
@@ -75,7 +134,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">学生性别</div>
-                                <input class="form-control" type="text" id="search-owner">
+                                <input class="form-control" type="text" id="search-sex">
                             </div>
                         </div>
 
@@ -83,13 +142,13 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">家庭地址</div>
-                                <input class="form-control" type="text" id="search-startDate" />
+                                <input class="form-control" type="text" id="search-address" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">联系电话</div>
-                                <input class="form-control" type="text" id="search-endDate">
+                                <input class="form-control" type="text" id="search-phone">
                             </div>
                         </div>
 
@@ -107,8 +166,8 @@
                                 <td><input type="checkbox" id="selAll"/></td>
                                 <td>姓名</td>
                                 <td>性别</td>
-                                <td>家庭地址</td>
-                                <td>联系电话</td>
+                                <td>地址</td>
+                                <td>电话</td>
                             </tr>
                         </thead>
                         <tbody id="studentBody">

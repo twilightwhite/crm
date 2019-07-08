@@ -10,6 +10,7 @@
   
   	<package name="com.bjpowernode.crm.settings.domain"/>
   	<package name="com.bjpowernode.crm.workbench.domain"/>
+  	<package name="com.bjpowernode.crm.test.domain"/>
 
   
   </typeAliases>

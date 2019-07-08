@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjpowernode.crm.test.dao.StudentDao">
+    <select id="getStudent" resultType="Student">
+        select * from student
+        <where>
+            <if test="name != null and name != ''">
+                and name like '%' #{name} '%'
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="address != null and address != ''">
+                and address like '%' #{address} '%'
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like '%' #{phone} '%'
+            </if>
+        </where>
+        order by name
+        limit #{skipCount},#{pageSize}
+    </select>
+    <select id="getTotal" resultType="int">
+        select count(*) from student
+        <where>
+            <if test="name != null and name != ''">
+                and name like '%'#{name}'%'
+            </if>
+            <if test="sex != null and sex != ''">
+                sex=#{sex}
+            </if>
+            <if test="adress != null and adress != ''">
+                adress like '%'#{adress}'%'
+            </if>
+            <if test="phone != null and phone != ''">
+                phone like '%'#{phone}'%'
+            </if>
+        </where>
+    </select>
+</mapper>
